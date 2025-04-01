@@ -4,7 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AuthForm from './AuthForm';
 
-const SignIn = () => {
+const SignIn = ({ onAuthChange }) => {
   const [isSignIn, setIsSignIn] = useState(true);
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ const SignIn = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:5174/api/auth/signin", {
+      const response = await fetch("http://localhost:5175/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: formData.email, password: formData.password }),
@@ -38,6 +38,10 @@ const SignIn = () => {
 
       toast.dismiss();
       toast.success("Sign-in successful!");
+
+      localStorage.setItem('authToken', data.token);
+
+      onAuthChange();
 
       window.location.href = "/notes";  
     } catch (error) {
