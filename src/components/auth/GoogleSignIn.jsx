@@ -3,8 +3,7 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 const GoogleSignIn = () => {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
-  console.log("Google Client ID:", clientId);
+  
   const handleSuccess = async (response) => {
     try {
       const res = await fetch("http://localhost:3000/api/auth/google-signin", {
