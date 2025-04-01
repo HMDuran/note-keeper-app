@@ -7,7 +7,10 @@ const AuthToggle = ({ isSignIn, toggleAuthMode }) => (
     </span>
     <button
       className="mt-2 text-br font-semibold hover:underline"
-      onClick={toggleAuthMode}
+      onClick={(e) => {
+        e.preventDefault();
+        toggleAuthMode();
+      }}
     >
       {isSignIn ? 'Sign Up' : 'Sign In'}
     </button>

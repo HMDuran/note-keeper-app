@@ -1,14 +1,36 @@
 import React, { useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Logo from '../common/Logo';
 import AuthToggle from './AuthToggle';
 import InputField from '../common/InputField';
 import GoogleSignIn from './GoogleSignIn';
 
-const AuthForm = () => {
+const AuthForm = ({ onSubmit }) => {
   const [isSignIn, setIsSignIn] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
   const toggleAuthMode = () => {
     setIsSignIn(!isSignIn);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  
+    if (!email || !password || (!isSignIn && (!confirmPassword || !firstName || !lastName))) {
+      toast.error("All fields are required!");
+      return;
+    }
+    if (!isSignIn && password !== confirmPassword) {
+      toast.error("Passwords do not match!");
+      return;
+    }
+
+    onSubmit({ firstName, lastName, email, password, confirmPassword });
   };
 
   return (
@@ -19,31 +41,32 @@ const AuthForm = () => {
             <Logo />
             <h2 className="text-2xl xl:text-3xl font-bold">{isSignIn ? 'Sign In' : 'Sign Up'}</h2>
 
-            <div className="w-full flex-1 mt-8">
+            <form className="w-full flex-1 mt-8" onSubmit={handleSubmit}>
               <div className={`mx-auto ${!isSignIn ? 'max-w-xl' : 'max-w-xs'}`}>
                 {!isSignIn && (
                   <div className="flex flex-col sm:flex-row gap-0">
-                    <InputField type="text" placeholder="First Name" />
-                    <InputField className="ml-0 sm:ml-4" type="text" placeholder="Last Name" />
+                    <InputField type="text" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                    <InputField className="ml-0 sm:ml-4" type="text" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                   </div>
                 )}
-                <InputField type="email" placeholder="Email" />
+                <InputField type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <div className="flex flex-col md:flex-row sm:gap-0">
-                  <InputField type="password" placeholder="Password" />
-                  {!isSignIn && <InputField className="ml-0 md:ml-4" type="password" placeholder="Confirm Password" />}
+                  <InputField type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                  {!isSignIn && <InputField className="ml-0 md:ml-4" type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />}
                 </div>
 
                 <AuthToggle isSignIn={isSignIn} toggleAuthMode={toggleAuthMode} />
 
-                <button className="mt-5 tracking-wide font-semibold bg-tan-200 hover:text-white text-black w-full py-4 rounded-lg hover:bg-tan-300 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                <button type="submit" className="mt-5 tracking-wide font-semibold bg-tan-200 hover:text-white text-black w-full py-4 rounded-lg hover:bg-tan-300 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                   <span className="ml-3">{isSignIn ? 'Sign In' : 'Sign Up'}</span>
                 </button>
               </div>
-            </div>
+            </form>
 
             {isSignIn && <GoogleSignIn />}
           </div>
         </div>
+        <ToastContainer />
       </div>
     </div>
   );

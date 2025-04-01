@@ -1,14 +1,20 @@
 import pool from '../config/db.js';
 
-const User = {
-  create: async (user) => {
-    const { email, firstName, lastName, password } = user;
-    const res = await pool.query(
-      'INSERT INTO users (email, first_name, last_name, password) VALUES ($1, $2, $3, $4) RETURNING *',
-      [email, firstName, lastName, password]
-    );
-    return res.rows[0];
-  },
-};
+export const createUser = async ({ firstName, lastName, email, hashedPassword }) => {
+  const query = `
+    INSERT INTO users (first_name, last_name, email, password)
+    VALUES ($1, $2, $3, $4)
+    RETURNING *;
+  `;
+  const values = [firstName, lastName, email, hashedPassword];
 
-export default User;
+  try {
+    console.log("Executing query:", query, values);
+    const result = await pool.query(query, values);
+    console.log("Query result:", result.rows[0]);
+    return result.rows[0];
+  } catch (error) {
+    console.error("Database error:", error.message || error);
+    throw error;
+  }
+};
