@@ -2,35 +2,29 @@ import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Logo from '../common/Logo';
-import AuthToggle from './AuthToggle';
+import AuthToggle from './AuthToggle';  
 import InputField from '../common/InputField';
 import GoogleSignIn from './GoogleSignIn';
 
-const AuthForm = ({ onSubmit }) => {
-  const [isSignIn, setIsSignIn] = useState(true);
+const AuthForm = ({ onSubmit, isSignIn: initialIsSignIn, toggleAuthMode }) => {
+  const [isSignIn, setIsSignIn] = useState(initialIsSignIn);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
-  const toggleAuthMode = () => {
-    setIsSignIn(!isSignIn);
+  const resetForm = () => {
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setFirstName('');
+    setLastName('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    if (!email || !password || (!isSignIn && (!confirmPassword || !firstName || !lastName))) {
-      toast.error("All fields are required!");
-      return;
-    }
-    if (!isSignIn && password !== confirmPassword) {
-      toast.error("Passwords do not match!");
-      return;
-    }
-
-    onSubmit({ firstName, lastName, email, password, confirmPassword });
+    onSubmit({ firstName, lastName, email, password, confirmPassword, resetForm });
   };
 
   return (
@@ -55,8 +49,7 @@ const AuthForm = ({ onSubmit }) => {
                   {!isSignIn && <InputField className="ml-0 md:ml-4" type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />}
                 </div>
 
-                <AuthToggle isSignIn={isSignIn} toggleAuthMode={toggleAuthMode} />
-
+                <AuthToggle isSignIn={isSignIn} toggleAuthMode={toggleAuthMode} /> 
                 <button type="submit" className="mt-5 tracking-wide font-semibold bg-tan-200 hover:text-white text-black w-full py-4 rounded-lg hover:bg-tan-300 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                   <span className="ml-3">{isSignIn ? 'Sign In' : 'Sign Up'}</span>
                 </button>

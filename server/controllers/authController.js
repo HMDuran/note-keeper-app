@@ -5,13 +5,11 @@ import bcrypt from "bcrypt";
 
 export const signUp = async (req, res) => {
   try {
-    console.log("Request body received:", req.body);
     const { firstName, lastName, email, password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await createUser({ firstName, lastName, email, hashedPassword });
 
-    console.log("User created successfully:", user);
     res.status(201).json({ message: "User created successfully", user });
   } catch (error) {
     console.error("Backend error during signup:", error.message || error);
@@ -50,5 +48,33 @@ export const googleSignIn = async (req, res) => {
   } catch (error) {
     console.error("Error verifying Google token:", error.message || error);
     res.status(401).json({ success: false, message: "Invalid token" });
+  }
+};
+
+export const signIn = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
+    }
+
+    const user = await findUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Sign-in successful",
+      user: { email: user.email, firstName: user.first_name, lastName: user.last_name },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };

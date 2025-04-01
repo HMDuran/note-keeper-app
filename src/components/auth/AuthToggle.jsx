@@ -9,7 +9,7 @@ const AuthToggle = ({ isSignIn, toggleAuthMode }) => (
       className="mt-2 text-br font-semibold hover:underline"
       onClick={(e) => {
         e.preventDefault();
-        toggleAuthMode();
+        toggleAuthMode(); // This triggers the function passed down from AuthForm
       }}
     >
       {isSignIn ? 'Sign Up' : 'Sign In'}
