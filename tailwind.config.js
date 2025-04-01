@@ -15,6 +15,10 @@ export default {
           300: '#C2A06E',
         },
       },
+
+      fontFamily: {
+        glacial: ["'glacial-indifference', sans-serif"],
+      },
     },
   },
   plugins: [],
