@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "../assets/images/logo/logo.png";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Header = ({ onLogout }) => {
     return (
@@ -11,15 +12,14 @@ const Header = ({ onLogout }) => {
                         alt="Logo"
                         className="h-10 w-10 object-cover"
                     />
-                    <span className="text-3xl font-glacial font-extrabold text-gray-800">Note Keeper</span>
+                    <span className="text-2xl pt-4 font-glacial font-extrabold text-gray-800">ote Keeper</span>
                 </div>
-
                 <button
                     onClick={onLogout}
-                    className="text-2xl text-gray-800 hover:text-red-600"
+                    className="text-2xl text-gray-800 hover:text-brown-200"
                     title="Logout"
                 >
-                    Logout
+                   <LogoutIcon /> 
                 </button>
             </div>
         </header>

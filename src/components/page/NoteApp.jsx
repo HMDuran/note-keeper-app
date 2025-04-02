@@ -1,27 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import Header from "../Header";
+import Note from "../notes/Note";
+import AddNote from "../notes/AddNote";
 
 const NoteApp = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(true);
-
-    const handleLogout = () => {
-        localStorage.removeItem("authToken");
-        setIsAuthenticated(false);
-        window.location.href = "/signIn";
-    };
-
-    if (!isAuthenticated) {
-        return null; 
-    }
-
-    return (
-        <div className="flex flex-col min-h-screen">
-            <Header onLogout={handleLogout} />
-            <div className="flex-grow p-4">
-                <h1>Welcome to Notes App!</h1>
-            </div>
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <div className="flex-grow p-4">
+        <AddNote />
+        {/* Notes Flexbox */}
+        <div
+            className="flex flex-wrap gap-4 mt-4 justify-center items-start"
+            style={{ alignContent: "flex-start", maxWidth: "100%", margin: "0 auto" }}
+            >
+            <Note />
+            <Note />
+            <Note />
+            <Note />
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default NoteApp;
