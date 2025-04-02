@@ -14,24 +14,33 @@ const SignUp = () => {
       toast.error("Passwords do not match!");
       return;
     }
-
+  
     try {
       const response = await fetch("/api/auth/signup", {
-        firstName,
-        lastName,
-        email,
-        password,
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json", 
+        },
+        body: JSON.stringify({ 
+          firstName,
+          lastName,
+          email,
+          password,
+        }),
       });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create user");
+      }
+  
+      const data = await response.json();
       toast.success("User created successfully! Please sign in.");
       resetForm();
-      setTimeout(() => navigate('/signIn'), 2000);  
+      setTimeout(() => navigate('/signIn'), 2000);
     } catch (error) {
-      console.error("Error during signup:", error);
-      if (error.response) {
-        toast.error(error.response.data.message || "Failed to create user");
-      } else {
-        toast.error("No response from server. Please try again later.");
-      }
+      console.error("Error during signup:", error.message);
+      toast.error(error.message || "No response from server. Please try again later.");
     }
   };
 

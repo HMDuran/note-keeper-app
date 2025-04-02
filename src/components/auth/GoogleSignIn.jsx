@@ -21,6 +21,7 @@ const GoogleSignIn = () => {
       }
   
       if (data.success) {
+        localStorage.setItem("userId", data.user.id); 
         localStorage.setItem("authToken", response.credential); 
         window.location.href = "/notes"; 
       } else {
@@ -33,7 +34,6 @@ const GoogleSignIn = () => {
   };
   
   const handleError = (error) => {
-    console.error("Google Login Failed", error);
     alert("Google Sign-In failed. Please try again.");
   };
 

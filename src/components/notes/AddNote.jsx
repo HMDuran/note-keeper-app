@@ -21,16 +21,40 @@ function AddNote(props) {
     }));
   }
 
-  function submitNote(event) {
-    props.onAdd(note);
+  async function submitNote(event) {
+    event.preventDefault();
+  
+    const noteWithUserId = {
+      ...note,
+      userId: props.userId,
+    };
+  
+    try {
+      const response = await fetch("/api/notes/add", { 
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(noteWithUserId),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add note");
+      }
+
+      const data = await response.json();
+      props.onAdd(data); 
+    } catch (error) {
+      console.error("Error adding note:", error);
+    }
+  
     setNote({
       title: "",
       content: "",
     });
-    setExpanded(false); 
-    event.preventDefault();
+    setExpanded(false);
   }
-
+  
   function expand() {
     setExpanded(true);
   }
