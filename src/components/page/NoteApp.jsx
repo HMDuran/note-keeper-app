@@ -5,17 +5,16 @@ import Note from "../notes/Note";
 
 const NoteApp = ({ onLogout }) => {
   const [notes, setNotes] = useState([]);
-  const userId = localStorage.getItem("userId"); 
+  const userId = localStorage.getItem("userId");
   console.log("Retrieved userId:", userId);
 
   useEffect(() => {
     if (!userId) {
-      console.error("User ID is missing. Redirecting to login...");
       window.location.href = "/signIn";
       return;
     }
-  
-    fetch(`/api/notes/${userId}`) 
+
+    fetch(`/api/notes/${userId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch notes");
@@ -23,13 +22,31 @@ const NoteApp = ({ onLogout }) => {
         return response.json();
       })
       .then((data) => {
-        setNotes(data); 
+        setNotes(data);
       })
       .catch((error) => console.error(error));
   }, [userId]);
-  
+
   const handleAddNote = (newNote) => {
     setNotes((prevNotes) => [newNote, ...prevNotes]);
+  };
+
+  const handleDeleteNote = async (id) => {
+    try {
+      const response = await fetch(`/api/notes/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }), 
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete note");
+      }
+
+      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    }
   };
 
   return (
@@ -42,7 +59,13 @@ const NoteApp = ({ onLogout }) => {
           style={{ alignContent: "flex-start", maxWidth: "100%", margin: "0 auto" }}
         >
           {notes.map((note) => (
-            <Note key={note.id} title={note.title} content={note.content} />
+            <Note
+              key={note.id}
+              id={note.id} 
+              title={note.title}
+              content={note.content}
+              handleDelete={handleDeleteNote}
+            />
           ))}
         </div>
       </div>

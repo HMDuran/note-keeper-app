@@ -23,3 +23,15 @@ export const getNotesByUserId = async (userId) => {
     throw new Error("Failed to fetch notes from database");
   }
 };
+
+export const deleteNoteFromDB = async (id, userId) => {
+  try {
+    const result = await pool.query(
+      "DELETE FROM notes WHERE id = $1 AND user_id = $2 RETURNING *",
+      [id, userId] 
+    );
+    return result.rows[0];
+  } catch (err) {
+    throw new Error("Failed to delete note from database: " + err.message);
+  }
+};
