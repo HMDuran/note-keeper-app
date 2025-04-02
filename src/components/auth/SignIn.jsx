@@ -22,7 +22,7 @@ const SignIn = ({ onAuthChange }) => {
         return;
       }
 
-      const response = await fetch("http://localhost:5175/api/auth/signin", {
+      const response = await fetch("/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: formData.email, password: formData.password }),

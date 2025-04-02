@@ -16,7 +16,7 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5174/api/auth/signup', {
+      const response = await fetch("/api/auth/signup", {
         firstName,
         lastName,
         email,
@@ -24,7 +24,7 @@ const SignUp = () => {
       });
       toast.success("User created successfully! Please sign in.");
       resetForm();
-      setTimeout(() => navigate('/signIn'), 1000);  
+      setTimeout(() => navigate('/signIn'), 2000);  
     } catch (error) {
       console.error("Error during signup:", error);
       if (error.response) {

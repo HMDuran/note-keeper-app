@@ -3,25 +3,26 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 const GoogleSignIn = () => {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   
   const handleSuccess = async (response) => {
     try {
-      const res = await fetch("http://localhost:3000/api/auth/google-signin", {
+      const res = await fetch(`${API_URL}/api/auth/google-signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: response.credential }),
       });
   
       const data = await res.json();
+  
       if (!res.ok) {
-        console.error("Server error:", res.status, data.message);
         alert(`Google Sign-In Error: ${data.message}`);
         return;
       }
   
-      console.log("Server response:", data);
       if (data.success) {
-        window.location.href = "/notes";
+        localStorage.setItem("authToken", response.credential); 
+        window.location.href = "/notes"; 
       } else {
         alert(`Google Sign-In Error: ${data.message}`);
       }
@@ -30,7 +31,7 @@ const GoogleSignIn = () => {
       alert("Something went wrong. Please try again later.");
     }
   };
-
+  
   const handleError = (error) => {
     console.error("Google Login Failed", error);
     alert("Google Sign-In failed. Please try again.");
