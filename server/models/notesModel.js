@@ -1,10 +1,10 @@
 import pool from "../config/db.js"; 
 
-export const addNoteToDB = async (userId, title, content) => {
+export const addNoteToDB = async (userId, title, content, color = "#ffffff") => {
   try {
     const result = await pool.query(
-      "INSERT INTO notes (user_id, title, content) VALUES ($1, $2, $3) RETURNING *",
-      [userId, title || "", content] 
+      "INSERT INTO notes (user_id, title, content, color) VALUES ($1, $2, $3, $4) RETURNING *",
+      [userId, title || "", content, color] 
     );
     return result.rows[0];
   } catch (err) {
@@ -36,11 +36,11 @@ export const deleteNoteFromDB = async (id, userId) => {
   }
 };
 
-export const updateNoteInDB = async (id, userId, title, content) => {
+export const updateNoteInDB = async (id, userId, title, content, color = "#ffffff") => {
   try {
     const result = await pool.query(
-      "UPDATE notes SET title = $1, content = $2 WHERE id = $3 AND user_id = $4 RETURNING *",
-      [title, content, id, userId]
+      "UPDATE notes SET title = $1, content = $2, color = $3 WHERE id = $4 AND user_id = $5 RETURNING *",
+      [title, content, color, id, userId]
     );
     return result.rows[0];
   } catch (err) {

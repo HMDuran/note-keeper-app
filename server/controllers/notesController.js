@@ -1,14 +1,14 @@
 import { addNoteToDB, getNotesByUserId, deleteNoteFromDB, updateNoteInDB } from "../models/notesModel.js";
 
 export const addNote = async (req, res) => {
-  const { userId, title, content } = req.body;
+  const { userId, title, content, color = "#ffffff" } = req.body; 
 
   if (!userId || !content) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
   try {
-    const newNote = await addNoteToDB(userId, title || "", content);
+    const newNote = await addNoteToDB(userId, title || "", content, color); 
     res.status(201).json(newNote);
   } catch (err) {
     console.error("Error in addNote:", err);
@@ -51,14 +51,14 @@ export const deleteNote = async (req, res) => {
 
 export const updateNote = async (req, res) => {
   const { id } = req.params;
-  const { userId, title, content } = req.body;
+  const { userId, title, content, color } = req.body; 
 
-  if (!id || !userId || !title || !content) {
+  if (!id || !userId || !title || !content || !color) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
   try {
-    const updatedNote = await updateNoteInDB(id, userId, title, content);
+    const updatedNote = await updateNoteInDB(id, userId, title, content, color); 
     if (!updatedNote) {
       return res.status(404).json({ error: "Note not found or not authorized" });
     }

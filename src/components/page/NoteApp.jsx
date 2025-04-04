@@ -48,13 +48,13 @@ const NoteApp = ({ onLogout }) => {
     }
   };
 
-  const handleUpdateNote = async (id, title, content) => {
+  const handleUpdateNote = async (id, title, content, color) => {
     try {
-      const updatedTitle = title.trim() === "" ? "Untitled" : title; 
+      const updatedTitle = title.trim() === "" ? "Untitled" : title;
       const response = await fetch(`/api/notes/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, title: updatedTitle, content }),
+        body: JSON.stringify({ userId, title: updatedTitle, content, color }), 
       });
   
       if (!response.ok) {
@@ -63,7 +63,7 @@ const NoteApp = ({ onLogout }) => {
   
       const updatedNote = await response.json();
       setNotes((prevNotes) =>
-        prevNotes.map((note) => (note.id === id ? updatedNote : note))
+        prevNotes.map((note) => (note.id === id ? updatedNote : note)) 
       );
     } catch (error) {
       console.error("Error updating note:", error);
@@ -85,6 +85,7 @@ const NoteApp = ({ onLogout }) => {
               id={note.id} 
               title={note.title}
               content={note.content}
+              color={note.color}
               handleDelete={handleDeleteNote}
               handleUpdate={handleUpdateNote}
             />

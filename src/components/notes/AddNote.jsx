@@ -1,23 +1,31 @@
 import React, { useState, useRef, useEffect } from "react";
+import { HexColorPicker } from "react-colorful"; 
 import AddIcon from "@mui/icons-material/Add";
 import { Fab } from "@mui/material";
 import { Zoom } from "@mui/material";
 
 function AddNote(props) {
   const [isExpanded, setExpanded] = useState(false);
-  const formRef = useRef(null); 
+  const formRef = useRef(null);
 
   const [note, setNote] = useState({
     title: "",
     content: "",
+    color: "#ffffff", 
   });
 
   function handleChange(event) {
     const { name, value } = event.target;
-
     setNote((prevNote) => ({
       ...prevNote,
       [name]: value,
+    }));
+  }
+
+  function handleColorChange(newColor) {
+    setNote((prevNote) => ({
+      ...prevNote,
+      color: newColor,
     }));
   }
 
@@ -37,26 +45,23 @@ function AddNote(props) {
         },
         body: JSON.stringify(noteWithUserId),
       });
-
+  
       if (!response.ok) {
         throw new Error("Failed to add note");
       }
-
+  
       const data = await response.json();
       props.onAdd(data);
     } catch (error) {
       console.error("Error adding note:", error);
     }
-
+  
     setNote({
       title: "",
       content: "",
+      color: "#ffffff", 
     });
     setExpanded(false);
-  }
-  
-  function expand() {
-    setExpanded(true);
   }
 
   useEffect(() => {
@@ -72,9 +77,16 @@ function AddNote(props) {
     };
   }, []);
 
+  function expand() {
+    setExpanded(true);
+  }
+
   return (
     <div className="max-w-md mx-auto p-4">
-      <form ref={formRef} className="add-note relative bg-white p-4 rounded-lg shadow-md mt-8 mb-5 mx-auto">
+      <form
+        ref={formRef}
+        className="add-note relative bg-white p-4 rounded-lg shadow-md mt-8 mb-5 mx-auto"
+      >
         {isExpanded && (
           <input
             name="title"
@@ -96,8 +108,19 @@ function AddNote(props) {
           className="w-full p-2 mb-2 rounded focus:outline-none focus:ring-2 focus:ring-brown-200 resize-none"
         />
 
+        {isExpanded && (
+          <HexColorPicker
+            color={note.color}
+            onChange={handleColorChange}
+            style={{ marginBottom: "1rem" }}
+          />
+        )}
+
         <Zoom in={isExpanded}>
-          <Fab onClick={submitNote} className="absolute right-4 bottom-[-18px] sm:right-2 sm:bottom-[-12px]">
+          <Fab
+            onClick={submitNote}
+            className="absolute right-4 bottom-[-18px] sm:right-2 sm:bottom-[-12px]"
+          >
             <AddIcon />
           </Fab>
         </Zoom>
