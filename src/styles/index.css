@@ -60,6 +60,35 @@ form.add-note button:hover {
   background: #C2A06E;
 }
 
+.note-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 40px; 
+}
+
+.note-buttons {
+  align-self: flex-end;
+}
+
+.note-title {
+  margin-bottom: 10px;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 90%;
+  z-index: 1000;
+}
+
 @media (max-width: 640px) {
   form.add-note button {
     right: 10px; 

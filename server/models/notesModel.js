@@ -35,3 +35,15 @@ export const deleteNoteFromDB = async (id, userId) => {
     throw new Error("Failed to delete note from database: " + err.message);
   }
 };
+
+export const updateNoteInDB = async (id, userId, title, content) => {
+  try {
+    const result = await pool.query(
+      "UPDATE notes SET title = $1, content = $2 WHERE id = $3 AND user_id = $4 RETURNING *",
+      [title, content, id, userId]
+    );
+    return result.rows[0];
+  } catch (err) {
+    throw new Error("Failed to update note in database: " + err.message);
+  }
+};

@@ -6,7 +6,6 @@ import Note from "../notes/Note";
 const NoteApp = ({ onLogout }) => {
   const [notes, setNotes] = useState([]);
   const userId = localStorage.getItem("userId");
-  console.log("Retrieved userId:", userId);
 
   useEffect(() => {
     if (!userId) {
@@ -49,6 +48,27 @@ const NoteApp = ({ onLogout }) => {
     }
   };
 
+  const handleUpdateNote = async (id, title, content) => {
+    try {
+      const response = await fetch(`/api/notes/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, title, content }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to update note");
+      }
+  
+      const updatedNote = await response.json();
+      setNotes((prevNotes) =>
+        prevNotes.map((note) => (note.id === id ? updatedNote : note))
+      );
+    } catch (error) {
+      console.error("Error updating note:", error);
+    }
+  };
+  
   return (
     <div className="flex flex-col min-h-screen">
       <Header onLogout={onLogout} />
@@ -65,6 +85,7 @@ const NoteApp = ({ onLogout }) => {
               title={note.title}
               content={note.content}
               handleDelete={handleDeleteNote}
+              handleUpdate={handleUpdateNote}
             />
           ))}
         </div>
