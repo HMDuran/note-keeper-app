@@ -4,7 +4,7 @@ export const addNoteToDB = async (userId, title, content) => {
   try {
     const result = await pool.query(
       "INSERT INTO notes (user_id, title, content) VALUES ($1, $2, $3) RETURNING *",
-      [userId, title, content]
+      [userId, title || "", content] 
     );
     return result.rows[0];
   } catch (err) {

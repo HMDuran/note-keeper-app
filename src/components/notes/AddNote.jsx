@@ -30,7 +30,7 @@ function AddNote(props) {
     };
   
     try {
-      const response = await fetch("/api/notes/add", { 
+      const response = await fetch("/api/notes/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,11 +43,11 @@ function AddNote(props) {
       }
 
       const data = await response.json();
-      props.onAdd(data); 
+      props.onAdd(data);
     } catch (error) {
       console.error("Error adding note:", error);
     }
-  
+
     setNote({
       title: "",
       content: "",
@@ -80,7 +80,7 @@ function AddNote(props) {
             name="title"
             onChange={handleChange}
             value={note.title}
-            placeholder="Title"
+            placeholder="Title (Optional)"
             className="w-full p-2 mb-2 rounded focus:outline-none focus:ring-2 focus:ring-brown-200"
           />
         )}
@@ -91,6 +91,7 @@ function AddNote(props) {
           onChange={handleChange}
           value={note.content}
           placeholder="Take a note..."
+          required
           rows={isExpanded ? 3 : 1}
           className="w-full p-2 mb-2 rounded focus:outline-none focus:ring-2 focus:ring-brown-200 resize-none"
         />

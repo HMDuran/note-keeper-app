@@ -50,10 +50,11 @@ const NoteApp = ({ onLogout }) => {
 
   const handleUpdateNote = async (id, title, content) => {
     try {
+      const updatedTitle = title.trim() === "" ? "Untitled" : title; 
       const response = await fetch(`/api/notes/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, title, content }),
+        body: JSON.stringify({ userId, title: updatedTitle, content }),
       });
   
       if (!response.ok) {

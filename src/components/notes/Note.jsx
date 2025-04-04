@@ -7,25 +7,26 @@ Modal.setAppElement("#root");
 
 const Note = ({ id, title, content, handleDelete, handleUpdate }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editTitle, setEditTitle] = useState(title);
+  const [editTitle, setEditTitle] = useState(title || ""); 
   const [editContent, setEditContent] = useState(content);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const handleSave = () => {
-    handleUpdate(id, editTitle, editContent);
+    const updatedTitle = editTitle.trim() === "" ? "Untitled" : editTitle; 
+    handleUpdate(id, updatedTitle, editContent);
     closeModal();
   };
 
   return (
     <div className="relative bg-white p-4 rounded-lg shadow-md w-full max-w-xs min-h-[180px] flex flex-col">
       <div className="flex items-start justify-between">
-        <h1 className="text-lg font-semibold cursor-pointer" onClick={openModal}>
-          {title}
+        <h1 className="text-lg font-semibold cursor-pointer p-2" onClick={openModal}>
+          {title || "Untitled"} 
         </h1>
         <div className="flex space-x-2">
-          <button className=" text-gray-600 hover:text-blue-500" onClick={openModal}>
+          <button className="text-gray-600 hover:text-blue-500" onClick={openModal}>
             <EditIcon fontSize="small" />
           </button>
           <button
@@ -47,11 +48,11 @@ const Note = ({ id, title, content, handleDelete, handleUpdate }) => {
         className="modal"
         overlayClassName="modal-overlay"
       >
-        <h2 className="text-lg font-semibold mb-4">Edit Note</h2>
         <input
           type="text"
           value={editTitle}
           onChange={(e) => setEditTitle(e.target.value)}
+          placeholder="Title (Optional)"
           className="border p-2 rounded mb-2 w-full"
         />
         <textarea

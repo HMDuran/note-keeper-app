@@ -3,12 +3,12 @@ import { addNoteToDB, getNotesByUserId, deleteNoteFromDB, updateNoteInDB } from 
 export const addNote = async (req, res) => {
   const { userId, title, content } = req.body;
 
-  if (!userId || !title || !content) {
+  if (!userId || !content) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
   try {
-    const newNote = await addNoteToDB(userId, title, content);
+    const newNote = await addNoteToDB(userId, title || "", content);
     res.status(201).json(newNote);
   } catch (err) {
     console.error("Error in addNote:", err);
